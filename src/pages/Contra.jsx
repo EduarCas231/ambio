@@ -25,7 +25,7 @@ const Contra = () => {
 
   return (
     <div style={{ backgroundColor: '#f5f7fa', minHeight: '100vh' }}>
-      <NavBar />
+      
       
       <Box sx={{ 
         maxWidth: 800, 
