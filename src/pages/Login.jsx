@@ -94,7 +94,7 @@ export default function Login() {
               <input id="remember-me" name="remember-me" type="checkbox" />
               <label htmlFor="remember-me">Recordarme</label>
             </div>
-            <a href="#" className="forgot-password">¿Olvidaste tu contraseña?</a>
+            <a href="/contra" className="forgot-password">¿Olvidaste tu contraseña?</a>
           </div>
 
           <button type="submit" disabled={isLoading} className={`login-button ${isLoading ? "loading" : ""}`}>

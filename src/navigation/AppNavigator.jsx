@@ -6,6 +6,7 @@ import Registro from '../pages/Registro';
 import EditI from '../pages/EditS';
 import RegistroS from '../pages/RegistroS';
 import Pedidos from '../pages/Pedidos';
+import Contra from '../pages/Contra';
 
 
 const isAuthenticated = () => !!localStorage.getItem('token');
@@ -20,6 +21,7 @@ export default function AppNavigator() {
       {/* Rutas públicas */}
       <Route path="/login" element={<Login />} />
       <Route path="/registro" element={<Registro />} />
+      <Route path="/contra" element={<Contra />} />
 
       {/* Ruta privada */}
       <Route 
