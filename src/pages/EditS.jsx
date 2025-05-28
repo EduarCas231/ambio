@@ -17,14 +17,12 @@ const EditS = () => {
 
   const [error, setError] = useState('');
 
-  // Función para formatear fechas en formato YYYY-MM-DD para inputs tipo date
+  // Formatea fechas tipo "2023-05-23T00:00:00Z" a "2023-05-23"
   const formatDateInput = (dateString) => {
     if (!dateString) return '';
-    // Si es timestamp o string con tiempo, extraemos solo la fecha
-    // Ejemplo: "2023-05-23T00:00:00Z" => "2023-05-23"
     try {
       const date = new Date(dateString);
-      if (isNaN(date)) return ''; // no es una fecha válida
+      if (isNaN(date)) return '';
       return date.toISOString().split('T')[0];
     } catch {
       return '';
@@ -65,10 +63,15 @@ const EditS = () => {
     e.preventDefault();
     setError('');
 
+    const token = localStorage.getItem('token');
+
     try {
       const response = await fetch(`https://3.139.72.90/pedidos/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(formData)
       });
 
@@ -146,4 +149,3 @@ const EditS = () => {
 };
 
 export default EditS;
-  

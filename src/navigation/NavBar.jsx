@@ -1,54 +1,79 @@
-// src/navigation/NavBar.jsx
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, NavLink, useLocation } from 'react-router-dom';
+import './NavBar.css';
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+  // Determina si estamos en la página de inicio
+  const isHomePage = location.pathname === '/home';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Solo aplica scroll effect en home
+      if (isHomePage) {
+        setScrolled(window.scrollY > 10);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isHomePage]);
+
+  const handleLogout = async () => {
+    try {
+      localStorage.clear();
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
-    <nav
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '10px 20px',
-        backgroundColor: '#007bff',
-        color: 'white',
-      }}
-    >
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-        <h2 style={{ margin: 0 }}>Inicio</h2>
-        {/* Enlace a la página de pedidos */}
-        <Link
-          to="/pedidos"
-          style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontWeight: 'bold',
-          }}
-        >
-          Pedidos
-        </Link>
-      </div>
+    <nav className={`navbar ${isHomePage ? (scrolled ? 'scrolled' : 'transparent') : 'solid'}`}>
+      <div className="navbar-content">
+        {/* Contenedor izquierdo con logo y enlaces */}
+        <div className="navbar-left">
+          <div>
+            <Link to="/home" className="logo">
+              <span className="logo-text">AMBIOLAB</span>
+            </Link>
+          </div>
+          <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
+            <NavLink 
+              to="/home" 
+              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+              end
+            >
+              Inicio
+            </NavLink>
+            <NavLink 
+              to="/pedidos" 
+              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+            >
+              Pedidos
+            </NavLink>
+          </div>
+        </div>
 
-      <button
-        onClick={handleLogout}
-        style={{
-          backgroundColor: 'white',
-          color: '#007bff',
-          border: 'none',
-          padding: '8px 16px',
-          cursor: 'pointer',
-          borderRadius: '4px',
-        }}
-      >
-        Cerrar Sesión
-      </button>
+        {/* Contenedor derecho con botón de logout */}
+        <div className="navbar-right">
+          <button onClick={handleLogout} className="logout-btn">
+            <span className="logout-text">Cerrar Sesión</span>
+          </button>
+          
+          <button 
+            className="menu-toggle"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`hamburger ${isMenuOpen ? 'open' : ''}`}></span>
+          </button>
+        </div>
+      </div>
     </nav>
   );
 };
