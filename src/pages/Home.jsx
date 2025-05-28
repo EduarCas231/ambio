@@ -71,29 +71,19 @@ const SERVICES = [
   }
 ];
 
-// Component for Hero Video Background
-const HeroVideoBackground = () => {
-  // Usa URL absoluta en producción, relativa en desarrollo
-  const videoUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://qc.d1rpr0bzn3zmq7.amplifyapp.com/esop.mp4' 
-    : '/esop.mp4';
-
-  return (
-    <div className="hero-video-container">
-      <video 
-        autoPlay 
-        muted 
-        loop 
-        playsInline
-        className="hero-video"
-      >
-        <source src={videoUrl} type="video/mp4" />
-        Tu navegador no soporta video HTML5.
-      </video>
+const HeroVideoBackground = () => (
+  <div className="hero-video-container">
+    <div className="youtube-video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/sqfz2PBIBmk?autoplay=1&mute=1&loop=1&playlist=sqfz2PBIBmk&controls=0&disablekb=1&modestbranding=1&rel=0&fs=0"
+        title="Video de presentación"
+        frameBorder="0"
+        allow="autoplay; encrypted-media"
+        allowFullScreen={false}
+      ></iframe>
     </div>
-  );
-};
-
+  </div>
+);
 
 
 // Component for Hero Content
