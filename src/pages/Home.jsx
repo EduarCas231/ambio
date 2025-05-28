@@ -11,14 +11,11 @@ import pressureVesselImage from '../assets/images.jpeg';
 import ambien from '../assets/ambien.png';
 
 // Hero Video Background component
-const HeroVideoBackground = () => (
-  <div className="hero-video-container">
-    <video autoPlay muted loop playsInline className="hero-video">
-      <source src="/esop.mp4" type="video/mp4" />
-      Tu navegador no soporta el video.
-    </video>
-  </div>
-);
+<video autoPlay muted loop playsInline controls style={{ width: '100%' }}>
+  <source src="/esop.mp4" type="video/mp4" />
+  Tu navegador no soporta el video.
+</video>
+
 
 // Hero Content component
 const HeroContent = () => (
