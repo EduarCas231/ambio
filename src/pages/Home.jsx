@@ -73,20 +73,7 @@ const SERVICES = [
 
 // Component for Hero Video Background
 // Component for Hero Video Background
-const HeroVideoBackground = () => (
-  <div className="hero-video-container">
-    <video 
-      autoPlay 
-      muted 
-      loop 
-      playsInline
-      className="hero-video"
-    >
-      <source src="/esop.mp4" type="video/mp4" />
-      Tu navegador no soporta video HTML5.
-    </video>
-  </div>
-);
+
 
 
 
@@ -176,7 +163,11 @@ const Home = () => {
       
       {/* Hero Section */}
       <section className="hero-section">
-        <HeroVideoBackground />
+      <video autoPlay muted loop id="background-video">
+  <source src="/esop.mp4" type="video/mp4" />
+  Tu navegador no soporta el tag de video.
+</video>
+
         <HeroContent />
       </section>
       
