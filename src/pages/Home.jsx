@@ -11,11 +11,18 @@ import pressureVesselImage from '../assets/images.jpeg';
 import ambien from '../assets/ambien.png';
 
 // Hero Video Background component
-<video autoPlay muted loop playsInline controls style={{ width: '100%' }}>
-  <source src="/esop.mp4" type="video/mp4" />
-  Tu navegador no soporta el video.
-</video>
-
+const HeroVideoBackground = () => (
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="hero-video"
+  >
+    <source src="/esop.mp4" type="video/mp4" />
+    Tu navegador no soporta el video.
+  </video>
+);
 
 // Hero Content component
 const HeroContent = () => (
@@ -35,7 +42,7 @@ const HeroContent = () => (
   </div>
 );
 
-// Feature and Service data
+// Features and Services
 const FEATURES = [
   {
     title: "Experiencia y Confiabilidad",
@@ -160,12 +167,12 @@ const Home = () => {
   return (
     <div className="home-container">
       <NavBar />
-      
+
       <section className="hero-section">
         <HeroVideoBackground />
         <HeroContent />
       </section>
-      
+
       <Box sx={{ 
         maxWidth: 1200, 
         margin: 'auto', 
@@ -198,12 +205,7 @@ const Home = () => {
           </Grid>
         </section>
 
-        <Divider sx={{ 
-          my: 8, 
-          backgroundColor: '#dd6b20', 
-          height: '2px',
-          background: 'linear-gradient(to right, transparent, #dd6b20, transparent)'
-        }} />
+        <Divider sx={{ my: 8, background: 'linear-gradient(to right, transparent, #dd6b20, transparent)', height: '2px' }} />
 
         {/* Why Us Section */}
         <section className="why-us-section scroll-animate">
@@ -300,7 +302,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Footer */}
         <footer className="footer scroll-animate" data-aos="fade-up">
           <Typography variant="body2" className="copyright">
             © Ambiolab – Derechos Reservados {new Date().getFullYear()}
