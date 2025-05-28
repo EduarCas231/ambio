@@ -8,7 +8,6 @@ import '../styles/Home.css';
 import teamImage from '../assets/ruido.jpeg';
 import waterAnalysisImage from '../assets/Lab-MECC.jpg';
 import pressureVesselImage from '../assets/images.jpeg';
-import esop from '../assets/esop.mp4';
 import ambien from '../assets/ambien.png';
 
 // Data constants
@@ -81,10 +80,11 @@ const HeroVideoBackground = () => (
       playsInline
       className="hero-video"
     >
-      <source src={esop} type="video/mp4" />
+      <source src="/esop.mp4" type="video/mp4" />
     </video>
   </div>
 );
+
 
 // Component for Hero Content
 const HeroContent = () => (
