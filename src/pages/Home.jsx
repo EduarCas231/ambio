@@ -10,7 +10,35 @@ import waterAnalysisImage from '../assets/Lab-MECC.jpg';
 import pressureVesselImage from '../assets/images.jpeg';
 import ambien from '../assets/ambien.png';
 
-// Data constants
+// Hero Video Background component
+const HeroVideoBackground = () => (
+  <div className="hero-video-container">
+    <video autoPlay muted loop playsInline className="hero-video">
+      <source src="/esop.mp4" type="video/mp4" />
+      Tu navegador no soporta el video.
+    </video>
+  </div>
+);
+
+// Hero Content component
+const HeroContent = () => (
+  <div className="hero-overlay">
+    <Typography variant="h2" component="h1" className="hero-title">
+      Soluciones Ambientales Integrales
+    </Typography>
+    <Typography variant="h5" className="hero-subtitle">
+      Precisión • Confiabilidad • Innovación
+    </Typography>
+    <div className="scroll-indicator">
+      <div className="mouse">
+        <div className="wheel"></div>
+      </div>
+      <div className="arrow-down"></div>
+    </div>
+  </div>
+);
+
+// Feature and Service data
 const FEATURES = [
   {
     title: "Experiencia y Confiabilidad",
@@ -70,41 +98,7 @@ const SERVICES = [
   }
 ];
 
-// Component for Hero Video Background
-const HeroVideoBackground = () => (
-  <div className="hero-video-container">
-    <video 
-      autoPlay 
-      muted 
-      loop 
-      playsInline
-      className="hero-video"
-    >
-      <source src="/esop.mp4" type="video/mp4" />
-    </video>
-  </div>
-);
-
-
-// Component for Hero Content
-const HeroContent = () => (
-  <div className="hero-overlay">
-    <Typography variant="h2" component="h1" className="hero-title">
-      Soluciones Ambientales Integrales
-    </Typography>
-    <Typography variant="h5" className="hero-subtitle">
-      Precisión • Confiabilidad • Innovación
-    </Typography>
-    <div className="scroll-indicator">
-      <div className="mouse">
-        <div className="wheel"></div>
-      </div>
-      <div className="arrow-down"></div>
-    </div>
-  </div>
-);
-
-// Component for Feature Cards
+// Feature Card component
 const FeatureCard = ({ feature, index }) => (
   <Grid 
     item 
@@ -128,7 +122,7 @@ const FeatureCard = ({ feature, index }) => (
   </Grid>
 );
 
-// Component for Service Cards
+// Service Card component
 const ServiceCard = ({ service, index }) => (
   <Grid 
     item 
@@ -160,7 +154,7 @@ const ServiceCard = ({ service, index }) => (
   </Grid>
 );
 
-// Main Component
+// Main Home component
 const Home = () => {
   useEffect(() => {
     initScrollAnimations();
@@ -170,7 +164,6 @@ const Home = () => {
     <div className="home-container">
       <NavBar />
       
-      {/* Hero Section */}
       <section className="hero-section">
         <HeroVideoBackground />
         <HeroContent />
@@ -191,13 +184,7 @@ const Home = () => {
         <section className="about-section scroll-animate">
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6} data-aos="fade-left">
-              <Typography 
-                variant="h4" 
-                component="h2" 
-                gutterBottom 
-                className="section-title"
-                sx={{ mb: 4 }}
-              >
+              <Typography variant="h4" gutterBottom className="section-title" sx={{ mb: 4 }}>
                 Sobre Nosotros
               </Typography>
               <Typography paragraph className="section-text" sx={{ mb: 3 }}>
@@ -223,17 +210,9 @@ const Home = () => {
 
         {/* Why Us Section */}
         <section className="why-us-section scroll-animate">
-          <Typography 
-            variant="h4" 
-            component="h2" 
-            gutterBottom 
-            className="section-title" 
-            data-aos="fade-up"
-            sx={{ mb: 6 }}
-          >
+          <Typography variant="h4" gutterBottom className="section-title" data-aos="fade-up" sx={{ mb: 6 }}>
             ¿Por qué elegirnos?
           </Typography>
-          
           <Grid container spacing={4} sx={{ mb: 4 }}>
             {FEATURES.map((feature, index) => (
               <FeatureCard key={index} feature={feature} index={index} />
@@ -241,26 +220,13 @@ const Home = () => {
           </Grid>
         </section>
 
-        <Divider sx={{ 
-          my: 8, 
-          backgroundColor: '#dd6b20', 
-          height: '2px',
-          background: 'linear-gradient(to right, transparent, #dd6b20, transparent)'
-        }} />
+        <Divider sx={{ my: 8, height: '2px', background: 'linear-gradient(to right, transparent, #dd6b20, transparent)' }} />
 
         {/* Services Section */}
         <section className="services-section scroll-animate">
-          <Typography 
-            variant="h4" 
-            component="h2" 
-            gutterBottom 
-            className="section-title" 
-            data-aos="fade-up"
-            sx={{ mb: 6 }}
-          >
+          <Typography variant="h4" gutterBottom className="section-title" data-aos="fade-up" sx={{ mb: 6 }}>
             Nuestros Servicios
           </Typography>
-          
           <Grid container spacing={4}>
             {SERVICES.map((service, index) => (
               <ServiceCard key={index} service={service} index={index} />
@@ -268,22 +234,11 @@ const Home = () => {
           </Grid>
         </section>
 
-        <Divider sx={{ 
-          my: 8, 
-          backgroundColor: '#dd6b20', 
-          height: '2px',
-          background: 'linear-gradient(to right, transparent, #dd6b20, transparent)'
-        }} />
+        <Divider sx={{ my: 8, height: '2px', background: 'linear-gradient(to right, transparent, #dd6b20, transparent)' }} />
 
         {/* Team Section */}
         <section className="team-section scroll-animate">
-          <Typography 
-            variant="h4" 
-            component="h2" 
-            gutterBottom 
-            className="section-title"
-            sx={{ mb: 6 }}
-          >
+          <Typography variant="h4" gutterBottom className="section-title" sx={{ mb: 6 }}>
             Nuestro Equipo
           </Typography>
           <Grid container spacing={4} alignItems="center">
@@ -298,11 +253,7 @@ const Home = () => {
                 src={teamImage} 
                 alt="Equipo Ambiolab" 
                 className="team-image"
-                style={{ 
-                  width: '50%', 
-                  borderRadius: '8px',
-                  boxShadow: '0 15px 30px rgba(0, 0, 0, 0.1)'
-                }}
+                style={{ width: '50%', borderRadius: '8px', boxShadow: '0 15px 30px rgba(0, 0, 0, 0.1)' }}
               />
             </Grid>
           </Grid>
@@ -310,21 +261,13 @@ const Home = () => {
 
         {/* Privacy Section */}
         <section className="privacy-section scroll-animate">
-          <Typography 
-            variant="h4" 
-            component="h2" 
-            gutterBottom 
-            className="section-title" 
-            data-aos="fade-up"
-            sx={{ mb: 6 }}
-          >
+          <Typography variant="h4" gutterBottom className="section-title" data-aos="fade-up" sx={{ mb: 6 }}>
             Aviso de Privacidad
           </Typography>
-          
           <Grid container spacing={4}>
             <Grid item xs={12} md={6} data-aos="fade-up">
               <div className="privacy-card">
-                <Typography variant="h5" component="h3" className="privacy-subtitle">
+                <Typography variant="h5" className="privacy-subtitle">
                   Datos personales que recabamos y protegemos:
                 </Typography>
                 <ul className="privacy-list">
@@ -335,10 +278,9 @@ const Home = () => {
                 </ul>
               </div>
             </Grid>
-            
             <Grid item xs={12} md={6} data-aos="fade-up" data-aos-delay="100">
               <div className="privacy-card">
-                <Typography variant="h5" component="h3" className="privacy-subtitle">
+                <Typography variant="h5" className="privacy-subtitle">
                   Finalidades del uso de sus datos:
                 </Typography>
                 <ul className="privacy-list">
@@ -350,9 +292,9 @@ const Home = () => {
               </div>
             </Grid>
           </Grid>
-          
+
           <div className="contact-card scroll-animate" data-aos="fade-up" style={{ marginTop: '4rem' }}>
-            <Typography variant="h5" component="h3" className="privacy-subtitle">
+            <Typography variant="h5" className="privacy-subtitle">
               Derechos ARCO:
             </Typography>
             <Typography paragraph className="section-text">
@@ -360,7 +302,7 @@ const Home = () => {
             </Typography>
           </div>
         </section>
-                  
+
         {/* Footer */}
         <footer className="footer scroll-animate" data-aos="fade-up">
           <Typography variant="body2" className="copyright">
