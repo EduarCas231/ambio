@@ -72,6 +72,7 @@ const SERVICES = [
 ];
 
 // Component for Hero Video Background
+// Component for Hero Video Background
 const HeroVideoBackground = () => (
   <div className="hero-video-container">
     <video 
@@ -81,11 +82,12 @@ const HeroVideoBackground = () => (
       playsInline
       className="hero-video"
     >
-      <source src={heroVideo} type="video/mp4" />
+      <source src="/esop.mp4" type="video/mp4" />
       Tu navegador no soporta video HTML5.
     </video>
   </div>
 );
+
 
 
 // Component for Hero Content
