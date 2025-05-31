@@ -4,13 +4,25 @@ import AmbiolabLogo from "../components/AmbiolabLogo";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
+
+
 export default function Login() {
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
+  
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +36,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("https://3.139.72.90/auth/login", {
+      const response = await fetch("http://189.136.55.203/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, password }),
@@ -36,10 +48,15 @@ export default function Login() {
         setError(data.error || "Error al iniciar sesión. Por favor verifica tus credenciales.");
         setMensaje("");
       } else {
-        setError("");
-        setMensaje(`Bienvenido ${data.user.nombre}`);
-        localStorage.setItem("token", data.token);
-        navigate("/home", { replace: true });
+        // Verifica que 'token' y 'user.tipo' estén en la respuesta
+        if (data.token && data.user?.tipo !== undefined) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("tipo", data.user.tipo); // 👈 Aquí guardamos el tipo de usuario
+          setMensaje(`Bienvenido ${data.user.nombre}`);
+          navigate("/home", { replace: true });
+        } else {
+          setError("Respuesta del servidor incompleta. No se pudo obtener el tipo de usuario.");
+        }
       }
     } catch (err) {
       setError("Error de conexión con el servidor. Por favor intenta nuevamente.");
@@ -73,16 +90,28 @@ export default function Login() {
           </div>
 
           <div className="input-group">
-            <label htmlFor="password">Contraseña</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
+            <TextField
+              fullWidth
+              label="Contraseña"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              required
+              variant="outlined"
+              margin="normal"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword((show) => !show)}
+                      edge="end"
+                      aria-label="toggle password visibility"
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </div>
 

@@ -117,7 +117,7 @@ export default function Registro() {
     }
 
     try {
-      const response = await fetch("https://3.139.72.90/auth/register", {
+      const response = await fetch("http://189.136.55.203/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

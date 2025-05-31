@@ -7,6 +7,8 @@ const NavBar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const userTipo = localStorage.getItem("tipo");
+
 
   // Determina si estamos en la página de inicio
   const isHomePage = location.pathname === '/home';
@@ -50,12 +52,15 @@ const NavBar = () => {
             >
               Inicio
             </NavLink>
-            <NavLink 
-              to="/pedidos" 
-              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
-            >
-              Pedidos
-            </NavLink>
+            {userTipo === '1' && (
+  <NavLink 
+    to="/pedidos" 
+    className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+  >
+    Pedidos
+  </NavLink>
+)}
+
           </div>
         </div>
 

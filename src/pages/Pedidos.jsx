@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import NavBar from '../navigation/NavBar';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Pedidos.css';
@@ -10,18 +10,16 @@ const Pedidos = () => {
   const [localCompletados, setLocalCompletados] = useState(new Set());
   const navigate = useNavigate();
 
-  const fetchPedidos = async () => {
+  const fetchPedidos = useCallback(async () => {
     try {
-      const response = await fetch('https://3.139.72.90/pedidos');
+      const response = await fetch('http://189.136.55.203/pedidos');
       if (!response.ok) throw new Error('Error al obtener pedidos');
       const newData = await response.json();
       
       setPedidos(prevPedidos => {
-        // Verificar si hay cambios reales
         const idsPrevios = new Set(prevPedidos.map(p => p.id_pedidos));
         const nuevosIds = new Set(newData.map(p => p.id_pedidos));
         
-        // Comprobar si los datos son iguales
         const sameLength = newData.length === prevPedidos.length;
         const sameContent = sameLength && newData.every(p => 
           idsPrevios.has(p.id_pedidos) && 
@@ -29,10 +27,9 @@ const Pedidos = () => {
         );
 
         if (sameContent) {
-          return prevPedidos; // No hay cambios, mantener estado actual
+          return prevPedidos;
         }
         
-        // Actualizar solo si hay cambios reales
         const pedidosMap = new Map(prevPedidos.map(p => [p.id_pedidos, p]));
         newData.forEach(newPedido => {
           pedidosMap.set(newPedido.id_pedidos, newPedido);
@@ -45,18 +42,13 @@ const Pedidos = () => {
     } finally {
       if (initialLoad) setInitialLoad(false);
     }
-  };
+  }, [initialLoad]);
 
   useEffect(() => {
-    // Cargar datos iniciales
     fetchPedidos();
-
-    // Configurar intervalo para actualización periódica (cada 5 segundos)
     const intervalId = setInterval(fetchPedidos, 5000);
-
-    // Limpiar intervalo al desmontar el componente
     return () => clearInterval(intervalId);
-  }, [initialLoad]);
+  }, [fetchPedidos]);
 
   const handleNuevoRegistro = () => {
     navigate('/registros');
@@ -158,21 +150,84 @@ const Pedidos = () => {
         ) : pedidos.length === 0 ? (
           <p className="pedidos-empty-message">No hay pedidos disponibles.</p>
         ) : (
-          <table className="pedidos-table">
-            <thead className="pedidos-table-header">
-              <tr>
-                {columnas.map((col) => (
-                  <th key={col} className="pedidos-table-header-cell">
-                    {formatColName(col)}
-                  </th>
-                ))}
-                <th className="pedidos-table-header-cell">Días Restantes</th>
-                <th className="pedidos-table-header-cell">Precio</th>
-                <th className="pedidos-table-header-cell">Ultima modificación</th>
-                <th className="pedidos-table-header-cell">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* Tabla para desktop */}
+            <table className="pedidos-table">
+              <thead className="pedidos-table-header">
+                <tr>
+                  {columnas.map((col) => (
+                    <th key={col} className="pedidos-table-header-cell">
+                      {formatColName(col)}
+                    </th>
+                  ))}
+                  <th className="pedidos-table-header-cell">Días Restantes</th>
+                  <th className="pedidos-table-header-cell">Precio</th>
+                  <th className="pedidos-table-header-cell">Ultima modificación</th>
+                  <th className="pedidos-table-header-cell">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pedidos.map((pedido) => {
+                  const diasRestantes = calcularDiasRestantes(pedido.fecha_inicio, pedido.fecha_final);
+                  const isLocalCompleted = localCompletados.has(pedido.id_pedidos);
+                  const colorDias = getColorDiasRestantes(diasRestantes);
+                  const colorEstatus = getColorEstatus(pedido.estatus, isLocalCompleted);
+
+                  return (
+                    <tr key={pedido.id_pedidos} className={`pedidos-table-row ${isLocalCompleted ? 'completed-row' : ''}`}>
+                      {columnas.map((col) => (
+                        <td key={col} className="pedidos-table-cell">
+                          {col === 'estatus' ? (
+                            <span className={`status-badge status-${colorEstatus}`}>
+                              {formatStatusText(pedido[col])}
+                            </span>
+                          ) : col.includes('fecha') ? (
+                            formatFecha(pedido[col])
+                          ) : (
+                            pedido[col]
+                          )}
+                        </td>
+                      ))}
+                      <td className="pedidos-table-cell">
+                        {diasRestantes !== null ? (
+                          <span className={`dias-badge dias-${colorDias}`}>
+                            {diasRestantes < 0 ? 'Expirado' : diasRestantes === 0 ? 'Hoy' : `${diasRestantes} días`}
+                          </span>
+                        ) : 'N/A'}
+                      </td>
+                      <td className="pedidos-table-cell">
+                        {formatPrecio(pedido.precio)}
+                      </td>
+                      <td className="pedidos-table-cell">
+                        {pedido.modificado_por_nombre
+                          ? `${pedido.modificado_por_nombre} ${pedido.modificado_por_app}`
+                          : 'N/A'}
+                      </td>
+                      <td className="pedidos-table-cell pedidos-action-cell">
+                        <button
+                          className="pedidos-button pedidos-button-warning"
+                          onClick={() => handleActualizar(pedido.id_pedidos)}
+                          disabled={isLocalCompleted}
+                        >
+                          🔄 Actualizar
+                        </button>
+                        {!isLocalCompleted && (
+                          <button
+                            className="pedidos-button pedidos-button-success"
+                            onClick={() => handleTerminarLocal(pedido.id_pedidos)}
+                          >
+                            ✅ Terminar
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            
+            {/* Cards para móviles */}
+            <div className="pedidos-cards">
               {pedidos.map((pedido) => {
                 const diasRestantes = calcularDiasRestantes(pedido.fecha_inicio, pedido.fecha_final);
                 const isLocalCompleted = localCompletados.has(pedido.id_pedidos);
@@ -180,38 +235,63 @@ const Pedidos = () => {
                 const colorEstatus = getColorEstatus(pedido.estatus, isLocalCompleted);
 
                 return (
-                  <tr key={pedido.id_pedidos} className={`pedidos-table-row ${isLocalCompleted ? 'completed-row' : ''}`}>
-                    {columnas.map((col) => (
-                      <td key={col} className="pedidos-table-cell">
-                        {col === 'estatus' ? (
-                          <span className={`status-badge status-${colorEstatus}`}>
-                            {formatStatusText(pedido[col])}
-                          </span>
-                        ) : col.includes('fecha') ? (
-                          formatFecha(pedido[col])
-                        ) : (
-                          pedido[col]
-                        )}
-                      </td>
-                    ))}
-                    <td className="pedidos-table-cell">
-                      {diasRestantes !== null ? (
-                        <span className={`dias-badge dias-${colorDias}`}>
-                          {diasRestantes < 0 ? 'Expirado' : diasRestantes === 0 ? 'Hoy' : `${diasRestantes} días`}
+                  <div 
+                    key={pedido.id_pedidos} 
+                    className={`pedido-card ${isLocalCompleted ? 'completed' : ''}`}
+                  >
+                    <div className="card-row">
+                      <span className="card-label">Nombre:</span>
+                      <span className="card-value">{pedido.nombre}</span>
+                    </div>
+                    <div className="card-row">
+                      <span className="card-label">Norma:</span>
+                      <span className="card-value">{pedido.norma}</span>
+                    </div>
+                    <div className="card-row">
+                      <span className="card-label">Estatus:</span>
+                      <span className="card-value">
+                        <span className={`status-badge status-${colorEstatus}`}>
+                          {formatStatusText(pedido.estatus)}
                         </span>
-                      ) : 'N/A'}
-                    </td>
-                    <td className="pedidos-table-cell">
-                      {formatPrecio(pedido.precio)}
-                    </td>
-                    <td className="pedidos-table-cell">
-  {pedido.modificado_por_nombre
-    ? `${pedido.modificado_por_nombre} ${pedido.modificado_por_app}`
-    : 'N/A'}
-</td>
-
-
-                    <td className="pedidos-table-cell pedidos-action-cell">
+                      </span>
+                    </div>
+                    <div className="card-row">
+                      <span className="card-label">Fecha Inicio:</span>
+                      <span className="card-value">{formatFecha(pedido.fecha_inicio)}</span>
+                    </div>
+                    <div className="card-row">
+                      <span className="card-label">Fecha Final:</span>
+                      <span className="card-value">{formatFecha(pedido.fecha_final)}</span>
+                    </div>
+                    <div className="card-row">
+                      <span className="card-label">Días Restantes:</span>
+                      <span className="card-value">
+                        {diasRestantes !== null ? (
+                          <span className={`dias-badge dias-${colorDias}`}>
+                            {diasRestantes < 0 ? 'Expirado' : diasRestantes === 0 ? 'Hoy' : `${diasRestantes} días`}
+                          </span>
+                        ) : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="card-row">
+                      <span className="card-label">Precio:</span>
+                      <span className="card-value">{formatPrecio(pedido.precio)}</span>
+                    </div>
+                    {pedido.comentario && (
+                      <div className="card-row">
+                        <span className="card-label">Comentario:</span>
+                        <span className="card-value">{pedido.comentario}</span>
+                      </div>
+                    )}
+                    <div className="card-row">
+                      <span className="card-label">Última modificación:</span>
+                      <span className="card-value">
+                        {pedido.modificado_por_nombre
+                          ? `${pedido.modificado_por_nombre} ${pedido.modificado_por_app}`
+                          : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="card-actions">
                       <button
                         className="pedidos-button pedidos-button-warning"
                         onClick={() => handleActualizar(pedido.id_pedidos)}
@@ -219,7 +299,6 @@ const Pedidos = () => {
                       >
                         🔄 Actualizar
                       </button>
-
                       {!isLocalCompleted && (
                         <button
                           className="pedidos-button pedidos-button-success"
@@ -228,12 +307,12 @@ const Pedidos = () => {
                           ✅ Terminar
                         </button>
                       )}
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>

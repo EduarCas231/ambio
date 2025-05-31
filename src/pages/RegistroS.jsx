@@ -25,7 +25,7 @@ const RegistroS = () => {
     setError('');
 
     try {
-      const response = await fetch('https://3.139.72.90/pedidos', {
+      const response = await fetch('http://189.136.55.203/pedidos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

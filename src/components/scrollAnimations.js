@@ -227,6 +227,3 @@ const SCROLL_CONFIG = {
     }, 100);
   };
   
-  // Auto-initialize on import (optional)
-  // Uncomment the line below if you want animations to start automatically
-  // initScrollAnimations();
