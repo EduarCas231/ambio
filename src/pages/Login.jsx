@@ -36,7 +36,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("http://189.136.55.203/auth/login", {
+      const response = await fetch("https://189.136.55.203/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, password }),

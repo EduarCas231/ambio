@@ -12,7 +12,7 @@ const Pedidos = () => {
 
   const fetchPedidos = useCallback(async () => {
     try {
-      const response = await fetch('http://189.136.55.203/pedidos');
+      const response = await fetch('https://189.136.55.203/pedidos');
       if (!response.ok) throw new Error('Error al obtener pedidos');
       const newData = await response.json();
       

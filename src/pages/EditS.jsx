@@ -32,7 +32,7 @@ const EditS = () => {
   useEffect(() => {
     const fetchPedido = async () => {
       try {
-        const response = await fetch(`http://189.136.55.203/pedidos/${id}`);
+        const response = await fetch(`https://189.136.55.203/pedidos/${id}`);
         if (!response.ok) throw new Error('Error al obtener el pedido');
 
         const data = await response.json();
@@ -66,7 +66,7 @@ const EditS = () => {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await fetch(`http://189.136.55.203/pedidos/${id}`, {
+      const response = await fetch(`https://189.136.55.203/pedidos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
