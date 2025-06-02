@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../styles/EditS.css';
+import NormaAutocomplete from '../../components/NormaAutocomplete';
 
 const EditS = () => {
   const { id } = useParams();
@@ -130,11 +131,7 @@ const EditS = () => {
 
           <div className="form-group">
             <label htmlFor="norma">Norma</label>
-            <input
-              type="text"
-              id="norma"
-              name="norma"
-              placeholder="Ingrese la norma aplicable"
+            <NormaAutocomplete
               value={formData.norma}
               onChange={handleChange}
             />

@@ -70,7 +70,7 @@ const News = () => {
     
     modal.innerHTML = `
       <div class="modal-content">
-        <h3>¿Eliminar noticia?</h3>
+        <h3>¿Eliminar Evento?</h3>
         <p>Esta acción no se puede deshacer si es eliminada</p>
         <div class="modal-buttons">
           <button class="cancel-btn">Cancelar</button>
@@ -110,19 +110,19 @@ const News = () => {
       <br />
       <div className="news-container">
         <div className="news-header">
-          <h2>Noticias</h2>
+          <h2>Eventos</h2>
           <button 
             onClick={handleCrearNoticia}
             className="create-button"
           >
-            <span className="plus-icon">+</span> Crear Noticia
+            <span className="plus-icon">+</span> Crear Evento
           </button>
         </div>
 
         {cargando ? (
           <div className="loading-container">
             <div className="loading-spinner"></div>
-            <p>Cargando noticias...</p>
+            <p>Cargando evento...</p>
           </div>
         ) : error ? (
           <div className="error-message">
@@ -133,9 +133,9 @@ const News = () => {
           </div>
         ) : noticias.length === 0 ? (
           <div className="empty-state">
-            <p>No hay noticias disponibles</p>
+            <p>No hay eventos disponibles</p>
             <button onClick={handleCrearNoticia} className="create-button">
-              Crear primera noticia
+              Crear primer evento
             </button>
           </div>
         ) : (

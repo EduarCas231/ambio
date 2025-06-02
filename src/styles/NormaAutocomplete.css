@@ -1,0 +1,186 @@
+.autocomplete-container {
+  width: 100%;
+}
+
+.autocomplete-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.autocomplete-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.autocomplete-input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.browse-button {
+  padding: 10px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.browse-button:hover {
+  background-color: #3a7bc8;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 1000;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.active {
+  background-color: #f5f8ff;
+}
+
+.suggestion-item.active {
+  background-color: #e8f0fe;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.normas-modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+.modal-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.category-list ul,
+.subcategory-list ul,
+.normas-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-list li,
+.subcategory-list li,
+.normas-list li {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.category-list li:hover,
+.subcategory-list li:hover,
+.normas-list li:hover {
+  background-color: #f0f7ff;
+}
+
+.modal-breadcrumb {
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.modal-breadcrumb span {
+  cursor: pointer;
+  color: #4a90e2;
+}
+
+.modal-breadcrumb span:hover {
+  text-decoration: underline;
+}
+
+.tabla-header {
+  font-weight: bold;
+  margin-top: 10px;
+  color: #555;
+}
+
+.tabla-normas {
+  padding-left: 20px !important;
+}
+
+.tabla-normas li {
+  border-left: 2px solid #eee;
+}

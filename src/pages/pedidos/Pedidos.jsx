@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import NavBar from '../../navigation/NavBar';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Pedidos.css';
@@ -8,10 +8,12 @@ const Pedidos = () => {
   const [pedidos, setPedidos] = useState([]);
   const [error, setError] = useState('');
   const [initialLoad, setInitialLoad] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const fetchPedidos = useCallback(async () => {
     try {
+      if (!initialLoad) setIsLoading(true);
       const response = await fetch('https://189.136.55.203/pedidos');
       if (!response.ok) throw new Error('Error al obtener pedidos');
       const newData = await response.json();
@@ -41,6 +43,7 @@ const Pedidos = () => {
       setError(err.message);
     } finally {
       if (initialLoad) setInitialLoad(false);
+      setIsLoading(false);
     }
   }, [initialLoad]);
 
@@ -141,9 +144,18 @@ const Pedidos = () => {
         </div>
 
         {error && <p className="pedidos-error-message">{error}</p>}
+        
+        {isLoading && !initialLoad && (
+          <div className="refresh-indicator">
+            <div className="loading-spinner-small"></div>
+          </div>
+        )}
 
         {initialLoad ? (
-          <p className="pedidos-empty-message">Cargando pedidos...</p>
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Cargando pedidos...</p>
+          </div>
         ) : pedidos.length === 0 ? (
           <p className="pedidos-empty-message">No hay pedidos disponibles.</p>
         ) : (
