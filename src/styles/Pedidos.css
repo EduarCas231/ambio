@@ -1,0 +1,287 @@
+.pedidos-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 80px; /* Espacio para el navbar fijo */
+}
+
+.pedidos-title {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.pedidos-button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pedidos-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.pedidos-button-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.pedidos-button-primary:hover {
+  background-color: #2980b9;
+}
+
+.pedidos-button-success {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.pedidos-button-success:hover {
+  background-color: #27ae60;
+}
+
+.pedidos-button-warning {
+  background-color: #f39c12;
+  color: white;
+}
+
+.pedidos-button-warning:hover {
+  background-color: #d35400;
+}
+
+.pedidos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.pedidos-table-header {
+  background-color: #34495e;
+  color: white;
+}
+
+.pedidos-table-row {
+  transition: background-color 0.3s ease;
+}
+
+.pedidos-table-row:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.pedidos-table-row:hover {
+  background-color: #e9ecef;
+}
+
+.pedidos-table-cell {
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.pedidos-table-header-cell {
+  padding: 1rem;
+  text-align: left;
+}
+
+.pedidos-error-message {
+  color: #e74c3c;
+  padding: 1rem;
+  background-color: #fadbd8;
+  border-radius: 4px;
+  border-left: 4px solid #e74c3c;
+}
+
+.pedidos-empty-message {
+  color: #7f8c8d;
+  text-align: center;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.pedidos-action-cell, .pedidos-terminar-cell {
+  text-align: center;
+}
+
+.pedidos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Estilos para los badges */
+.status-badge, .dias-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  min-width: 100px;
+}
+
+/* Colores para estatus */
+.status-gray {
+  background-color: #6c757d;
+}
+.status-blue {
+  background-color: #0d6efd;
+}
+.status-green {
+  background-color: #198754;
+}
+
+/* Colores para días restantes */
+.dias-red {
+  background-color: #dc3545;
+}
+.dias-yellow {
+  background-color: #ffc107;
+  color: #000;
+}
+.dias-green {
+  background-color: #198754;
+}
+.dias-blue {
+  background-color: #0d6efd;
+}
+.dias-gray {
+  background-color: #6c757d;
+}
+
+/* Estilo para filas completadas */
+.completed-row {
+  background-color: #d4edda !important;
+}
+
+.completed-row:hover {
+  background-color: #c3e6cb !important;
+}
+
+.completed-check {
+  color: #198754;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Deshabilitar botón cuando está completado */
+.pedidos-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Animación para nuevos registros */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pedidos-table-row:first-child {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+  .pedidos-container {
+    padding: 0.5rem;
+  }
+  
+  .pedidos-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .pedidos-table {
+    display: none;
+  }
+  
+  /* Estilos para las tarjetas móviles */
+  .pedidos-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .pedido-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 1rem;
+    border-left: 4px solid #3498db;
+  }
+  
+  .pedido-card.completed {
+    border-left-color: #2ecc71;
+    background-color: #d4edda;
+  }
+  
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .card-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .card-label {
+    font-weight: 600;
+    color: #2c3e50;
+    min-width: 120px;
+  }
+  
+  .card-value {
+    text-align: right;
+    flex-grow: 1;
+  }
+  
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+  }
+  
+  /* Ajustamos los botones para móviles */
+  .pedidos-button {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Ajustamos los badges para móviles */
+  .status-badge, .dias-badge {
+    padding: 0.25rem 0.5rem;
+    min-width: auto;
+    font-size: 0.75rem;
+  }
+}
+
+/* Media query para pantallas grandes (mostrar tabla) */
+@media (min-width: 769px) {
+  .pedidos-cards {
+    display: none;
+  }
+  
+  .pedidos-table {
+    display: table;
+  }
+}
