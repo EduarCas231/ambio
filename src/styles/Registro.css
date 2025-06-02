@@ -9,7 +9,7 @@
   
   .registro-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 700px;
   }
   
   .registro-card {
@@ -17,8 +17,11 @@
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    padding: 40px;
+    padding: 30px;
     transition: transform 0.3s ease;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .registro-card:hover {
@@ -44,24 +47,32 @@
   .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 15px;
     margin-bottom: 20px;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: #2c3e50;
     font-weight: 500;
+    align-self: flex-start;
+    width: 90%;
   }
   
   .form-group input {
-    width: 100%;
-    padding: 12px 15px;
+    width: 90%;
+    padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
@@ -162,8 +173,8 @@
   }
   
   .registro-button {
-    width: 100%;
-    padding: 14px;
+    width: 60%;
+    padding: 12px;
     background-color: #3498db;
     color: white;
     border: none;
@@ -173,6 +184,9 @@
     cursor: pointer;
     transition: all 0.3s;
     margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
   }
   
   .registro-button:hover {
@@ -244,3 +258,24 @@
       padding: 25px;
     }
   }
+/* Estilos adicionales para mejorar la organización */
+.password-strength {
+  width: 90%;
+  align-self: center;
+}
+
+.error-message {
+  align-self: flex-start;
+  margin-left: 5%;
+}
+
+@media (max-width: 768px) {
+  .form-group input,
+  .password-strength {
+    width: 95%;
+  }
+  
+  .form-group label {
+    width: 95%;
+  }
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import NavBar from '../../navigation/NavBar';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Pedidos.css';
+import NormaIcon from '../../components/NormaIcon';
 
 
 const Pedidos = () => {
@@ -132,6 +133,9 @@ const Pedidos = () => {
   return (
     <div>
       <NavBar />
+      <br />
+      <br />
+      <br />
       <div className="pedidos-container">
         <div className="pedidos-header">
           <h2 className="pedidos-title">Lista de Pedidos</h2>
@@ -161,20 +165,21 @@ const Pedidos = () => {
         ) : (
           <>
             {/* Tabla para desktop */}
-            <table className="pedidos-table">
-              <thead className="pedidos-table-header">
-                <tr>
-                  {columnas.map((col) => (
-                    <th key={col} className="pedidos-table-header-cell">
-                      {formatColName(col)}
-                    </th>
-                  ))}
-                  <th className="pedidos-table-header-cell">Días Restantes</th>
-                  <th className="pedidos-table-header-cell">Precio</th>
-                  <th className="pedidos-table-header-cell">Ultima modificación</th>
-                  <th className="pedidos-table-header-cell">Acciones</th>
-                </tr>
-              </thead>
+            <div className="table-responsive">
+              <table className="pedidos-table">
+                <thead className="pedidos-table-header">
+                  <tr>
+                    {columnas.map((col) => (
+                      <th key={col} className={`pedidos-table-header-cell ${col === 'comentario' ? 'comentario-cell' : ''}`}>
+                        {formatColName(col)}
+                      </th>
+                    ))}
+                    <th className="pedidos-table-header-cell">Días Restantes</th>
+                    <th className="pedidos-table-header-cell">Precio</th>
+                    <th className="pedidos-table-header-cell">Ultima modificación</th>
+                    <th className="pedidos-table-header-cell">Acciones</th>
+                  </tr>
+                </thead>
               <tbody>
                 {pedidos.map((pedido) => {
                   const diasRestantes = calcularDiasRestantes(pedido.fecha_inicio, pedido.fecha_final);
@@ -185,11 +190,13 @@ const Pedidos = () => {
                   return (
                     <tr key={pedido.id_pedidos} className={`pedidos-table-row ${isCompleted ? 'completed-row' : ''}`}>
                       {columnas.map((col) => (
-                        <td key={col} className="pedidos-table-cell">
+                        <td key={col} className={`pedidos-table-cell ${col === 'comentario' ? 'comentario-cell' : ''}`}>
                           {col === 'estatus' ? (
                             <span className={`status-badge status-${colorEstatus}`}>
                               {formatStatusText(pedido[col])}
                             </span>
+                          ) : col === 'norma' ? (
+                            <NormaIcon norma={pedido[col]} />
                           ) : col.includes('fecha') ? (
                             formatFecha(pedido[col])
                           ) : (
@@ -226,6 +233,7 @@ const Pedidos = () => {
                 })}
               </tbody>
             </table>
+            </div>
             
             {/* Cards para móviles */}
             <div className="pedidos-cards">
@@ -246,7 +254,9 @@ const Pedidos = () => {
                     </div>
                     <div className="card-row">
                       <span className="card-label">Norma:</span>
-                      <span className="card-value">{pedido.norma}</span>
+                      <span className="card-value">
+                        <NormaIcon norma={pedido.norma} />
+                      </span>
                     </div>
                     <div className="card-row">
                       <span className="card-label">Estatus:</span>
