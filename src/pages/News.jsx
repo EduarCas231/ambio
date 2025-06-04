@@ -13,7 +13,7 @@ const News = () => {
   useEffect(() => {
     const fetchNoticias = async () => {
       try {
-        const response = await fetch('https://189.136.55.203/news');
+        const response = await fetch('https://189.136.67.84/news');
         if (!response.ok) {
           throw new Error('Error al cargar las noticias');
         }
