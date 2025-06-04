@@ -35,7 +35,7 @@ const EditS = () => {
     const fetchPedido = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`https://189.136.55.203/pedidos/${id}`);
+        const response = await fetch(`https://189.136.67.84/pedidos/${id}`);
         if (!response.ok) throw new Error('Error al obtener el pedido');
 
         const data = await response.json();
@@ -72,7 +72,7 @@ const EditS = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch(`https://189.136.55.203/pedidos/${id}`, {
+      const response = await fetch(`https://189.136.67.84/pedidos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

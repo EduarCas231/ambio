@@ -29,7 +29,7 @@ const RegistroS = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://189.136.55.203/pedidos', {
+      const response = await fetch('https://189.136.67.84/pedidos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

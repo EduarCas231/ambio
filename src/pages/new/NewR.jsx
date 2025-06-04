@@ -25,7 +25,7 @@ const NewR = () => {
     setError(null);
 
     try {
-      const response = await fetch('https://189.136.55.203/news', {
+      const response = await fetch('https://189.136.67.84/news', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

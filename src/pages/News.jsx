@@ -41,7 +41,7 @@ const News = () => {
     setEliminandoId(id);
     
     try {
-      const response = await fetch(`https://189.136.55.203/news/${id}`, {
+      const response = await fetch(`https://189.136.67.84/news/${id}`, {
         method: 'DELETE',
       });
       
