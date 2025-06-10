@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../styles/EditS.css';
 import NormaAutocomplete from '../../components/NormaAutocomplete';
+import API from '../../config/api';
 
 const EditS = () => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ const EditS = () => {
     const fetchPedido = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`https://189.136.67.84/pedidos/${id}`);
+        const response = await fetch(API.pedidos.getById(id));
         if (!response.ok) throw new Error('Error al obtener el pedido');
 
         const data = await response.json();
@@ -72,7 +73,7 @@ const EditS = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch(`https://189.136.67.84/pedidos/${id}`, {
+      const response = await fetch(API.pedidos.update(id), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

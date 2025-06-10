@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navigation/NavBar';
 import '../styles/News.css';
+import API from '../config/api';
 
 const News = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const News = () => {
   useEffect(() => {
     const fetchNoticias = async () => {
       try {
-        const response = await fetch('https://189.136.67.84/news');
+        const response = await fetch(API.news.getAll);
         if (!response.ok) {
           throw new Error('Error al cargar las noticias');
         }
@@ -41,7 +42,7 @@ const News = () => {
     setEliminandoId(id);
     
     try {
-      const response = await fetch(`https://189.136.67.84/news/${id}`, {
+      const response = await fetch(API.news.delete(id), {
         method: 'DELETE',
       });
       

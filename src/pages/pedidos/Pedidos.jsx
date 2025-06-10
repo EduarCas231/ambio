@@ -3,6 +3,7 @@ import NavBar from '../../navigation/NavBar';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Pedidos.css';
 import NormaIcon from '../../components/NormaIcon';
+import API from '../../config/api';
 
 
 const Pedidos = () => {
@@ -15,7 +16,7 @@ const Pedidos = () => {
   const fetchPedidos = useCallback(async () => {
     try {
       if (!initialLoad) setIsLoading(true);
-      const response = await fetch('https://189.136.67.84/pedidos');
+      const response = await fetch(API.pedidos.getAll);
       if (!response.ok) throw new Error('Error al obtener pedidos');
       const newData = await response.json();
       
@@ -50,7 +51,7 @@ const Pedidos = () => {
 
   useEffect(() => {
     fetchPedidos();
-    const intervalId = setInterval(fetchPedidos, 5000);
+    const intervalId = setInterval(fetchPedidos, 50000);
     return () => clearInterval(intervalId);
   }, [fetchPedidos]);
 

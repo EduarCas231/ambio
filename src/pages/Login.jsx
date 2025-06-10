@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import AmbiolabLogo from "../components/AmbiolabLogo";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
+import API from "../config/api";
 
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -36,7 +37,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("https://189.136.67.84/auth/login", {
+      const response = await fetch(API.auth.login, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, password }),
@@ -48,10 +49,10 @@ export default function Login() {
         setError(data.error || "Error al iniciar sesión. Por favor verifica tus credenciales.");
         setMensaje("");
       } else {
-        // Verifica que 'token' y 'user.tipo' estén en la respuesta
+        
         if (data.token && data.user?.tipo !== undefined) {
           localStorage.setItem("token", data.token);
-          localStorage.setItem("tipo", data.user.tipo); // 👈 Aquí guardamos el tipo de usuario
+          localStorage.setItem("tipo", data.user.tipo); 
           setMensaje(`Bienvenido ${data.user.nombre}`);
           navigate("/home", { replace: true });
         } else {

@@ -10,6 +10,11 @@ import Contra from '../pages/Contra';
 import News from '../pages/News';
 import NewR from '../pages/new/NewR';
 import EditN from '../pages/new/EditN';
+import Visitas from '../pages/visitas/Visitas'
+import Detalles from '../pages/visitas/DetallesV'; 
+import Editar from '../pages/visitas/EditarV';
+import Escaner from '../pages/visitas/Escaner';
+import Registros from '../pages/visitas/RegistrosV'; 
 
 // Verifica si el usuario tiene token
 const isAuthenticated = () => !!localStorage.getItem('token');
@@ -101,6 +106,46 @@ export default function AppNavigator() {
         element={
           <AdminRoute>
             <EditN />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/visitas"
+        element={
+          <AdminRoute>
+            <Visitas />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/detalles/:id"
+        element={
+          <AdminRoute>
+            <Detalles />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/editar/:id"
+        element={
+          <AdminRoute>
+            <Editar />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/escaner"
+        element={
+          <AdminRoute>
+            <Escaner />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/registrosV"
+        element={
+          <AdminRoute>
+            <Registros />
           </AdminRoute>
         }
       />

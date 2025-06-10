@@ -1,17 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, NavLink, useLocation } from 'react-router-dom';
 import './NavBar.css';
+import API from '../config/api';
 
 const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const userTipo = localStorage.getItem("tipo");
-
+  const [userTipo, setUserTipo] = useState(localStorage.getItem("tipo"));
 
   // Determina si estamos en la página de inicio
   const isHomePage = location.pathname === '/home';
+
+  useEffect(() => {
+    // Verificar token al cargar el componente
+    const verificarToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        localStorage.clear();
+        navigate('/login', { replace: true });
+        return;
+      }
+
+      try {
+        const response = await fetch(API.auth.verify, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          throw new Error('Token inválido');
+        }
+
+        const data = await response.json();
+        
+        // Convertir a string para asegurar la comparación correcta
+        setUserTipo(String(data.tipo));
+      } catch (error) {
+        localStorage.clear();
+        navigate('/login', { replace: true });
+      }
+    };
+
+    verificarToken();
+  }, [navigate]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +62,7 @@ const NavBar = () => {
       localStorage.clear();
       navigate('/login', { replace: true });
     } catch (error) {
-      console.error('Logout error:', error);
+      // Error silencioso durante el cierre de sesión
     }
   };
 
@@ -52,7 +84,7 @@ const NavBar = () => {
             >
               Inicio
             </NavLink>
-            {userTipo === '1' && (
+            {(userTipo === '1' || userTipo === 1) && (
   <>
     <NavLink 
       to="/pedidos" 
@@ -65,6 +97,18 @@ const NavBar = () => {
       className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
     >
       Eventos
+    </NavLink>
+    <NavLink 
+      to="/visitas" 
+      className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+    >
+      Visitas
+    </NavLink>
+    <NavLink
+      to="/escaner"
+      className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+    >
+      Escaner
     </NavLink>
   </>
 )}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../navigation/NavBar';
+import API from '../../config/api';
 
 const NewR = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const NewR = () => {
     setError(null);
 
     try {
-      const response = await fetch('https://189.136.67.84/news', {
+      const response = await fetch(API.news.create, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import '../styles/Registro.css';
+import API from "../config/api";
 
 export default function Registro() {
   const [formData, setFormData] = useState({
@@ -117,7 +118,7 @@ export default function Registro() {
     }
 
     try {
-      const response = await fetch("https://189.136.67.84/auth/register", {
+      const response = await fetch(API.auth.register, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

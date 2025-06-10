@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import NavBar from '../../navigation/NavBar';
+import API from '../../config/api';
 
 const EditN = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const EditN = () => {
         console.log("Intentando cargar noticia con ID:", id);
         
         // Primero intentamos obtener todas las noticias
-        const response = await fetch('https://189.136.67.84/news');
+        const response = await fetch(API.news.getAll);
         if (!response.ok) {
           throw new Error('Error al cargar las noticias');
         }
@@ -72,7 +73,7 @@ const EditN = () => {
       const idNumerico = parseInt(id, 10);
       
       // Usamos PUT para actualizar en lugar de POST
-      const response = await fetch(`https://189.136.67.84/news/${idNumerico}`, {
+      const response = await fetch(API.news.update(idNumerico), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
