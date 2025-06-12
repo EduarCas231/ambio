@@ -151,6 +151,8 @@ function Escaner() {
   };
 
   return (
+    <>
+    <NavBar />
     <div className="scanner-container">
       <div className="scanner-header">
         <h1>Escanear Visita</h1>
@@ -241,6 +243,7 @@ function Escaner() {
         )}
       </div>
     </div>
+    </>
   );
 }
 
