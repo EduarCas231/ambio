@@ -153,6 +153,11 @@ function Escaner() {
   return (
     <>
     <NavBar />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
     <div className="scanner-container">
       <div className="scanner-header">
         <h1>Escanear Visita</h1>

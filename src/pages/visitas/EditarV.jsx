@@ -13,7 +13,7 @@ const Editar = () => {
     nombre: '',
     apellidoPaterno: '',
     apellidoMaterno: '',
-    lugar: 'LABSA S.A. DE C.V.',
+    lugar: 'Ambiolab Ingeneria Ambiental S.A. de C.V.',
     hora: '',
     dia: '',
     departamento: '',

@@ -20,7 +20,7 @@ const Registros = () => {
 
   const departamentos = [
     'Dirección',
-    'Tisc',
+    'Tics',
     'Almacén',
     'Sala de Juntas',
     'Sala de Usos Múltiples',
@@ -68,7 +68,7 @@ const Registros = () => {
         nombre: formData.nombre.trim(),
         apellidoPaterno: formData.apellidoPaterno.trim(),
         apellidoMaterno: formData.apellidoMaterno.trim() || null,
-        lugar: 'LABSA S.A. DE C.V.',
+        lugar: 'Ambiolab Ingeneria Ambiental S.A. de C.V.',
         fecha: formatFecha(formData.dia, formData.hora),
         departamento: formData.departamento,
         detalle: formData.detalle.trim() || null
