@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiEdit, FiTrash2, FiEye, FiPlus, FiSearch, FiClock } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiEye, FiPlus, FiSearch, FiClock, FiCheckCircle, FiBell } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 import '../../styles/Visitas.css';
 import API from '../../config/api';
@@ -11,6 +11,7 @@ const Visitas = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [notificaciones, setNotificaciones] = useState([]);
   const visitsPerPage = 10;
 
   // Filtros
@@ -36,6 +37,19 @@ const Visitas = () => {
         throw new Error('Formato inesperado de datos recibidos');
       }
 
+      // Detectar nuevas visitas escaneadas para notificaciones
+      const visitasEscaneadas = data.data.filter(v => v.escaneado && !visitas.find(old => old.id === v.id && old.escaneado));
+      if (visitasEscaneadas.length > 0) {
+        const nuevasNotificaciones = visitasEscaneadas.map(v => ({
+          id: Date.now() + Math.random(),
+          visitaId: v.id,
+          mensaje: `${v.nombre} ${v.apellidoPaterno} ha ingresado`,
+          timestamp: new Date(),
+          leida: false
+        }));
+        setNotificaciones(prev => [...nuevasNotificaciones, ...prev]);
+      }
+
       setVisitas(data.data);
     } catch (err) {
       setError(err.message);
@@ -52,7 +66,14 @@ const Visitas = () => {
 
   useEffect(() => {
     fetchVisitas();
+    // Actualizar cada 30 segundos para detectar nuevos escaneos
+    const interval = setInterval(fetchVisitas, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  const limpiarNotificaciones = () => {
+    setNotificaciones([]);
+  };
 
   const handleRegistroVisita = () => navigate('/registrosV');
   const handleEditar = (id) => navigate(`/editar/${id}`);
@@ -170,9 +191,34 @@ const Visitas = () => {
             <h1>Registro de Visitas</h1>
             <p>Administra y revisa el historial de visitas</p>
           </div>
-          <button className="primary-btn add-btn" onClick={handleRegistroVisita}>
-            <FiPlus className="btn-icon" /> Nueva Visita
-          </button>
+          <div className="header-actions">
+            {notificaciones.filter(n => !n.leida).length > 0 && (
+              <div className="notifications-container">
+                <button className="notification-btn" onClick={() => {
+                  const notifTexts = notificaciones.filter(n => !n.leida).map(n => n.mensaje).join('\n');
+                  Swal.fire({
+                    title: 'Nuevos Ingresos',
+                    text: notifTexts,
+                    icon: 'info',
+                    confirmButtonColor: '#2b91e7',
+                    showCancelButton: true,
+                    confirmButtonText: 'Marcar como leídas',
+                    cancelButtonText: 'Cerrar'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      limpiarNotificaciones();
+                    }
+                  });
+                }}>
+                  <FiBell className="btn-icon" />
+                  <span className="notification-badge">{notificaciones.filter(n => !n.leida).length}</span>
+                </button>
+              </div>
+            )}
+            <button className="primary-btn add-btn" onClick={handleRegistroVisita}>
+              <FiPlus className="btn-icon" /> Nueva Visita
+            </button>
+          </div>
         </div>
 
         <div className="stats-badge">
@@ -234,13 +280,14 @@ const Visitas = () => {
                   <th className="visitas-table-header-cell">Hora</th>
                   <th className="visitas-table-header-cell">Fecha</th>
                   <th className="visitas-table-header-cell">Departamento</th>
+                  <th className="visitas-table-header-cell">Estado</th>
                   <th className="visitas-table-header-cell">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {currentVisits.length > 0 ? (
                   currentVisits.map(visita => (
-                    <tr key={visita.id} className="visitas-table-row">
+                    <tr key={visita.id} className={`visitas-table-row ${visita.escaneado ? 'escaneada' : ''}`}>
                       <td className="visitas-table-cell">
                         {`${visita.nombre} ${visita.apellidoPaterno} ${visita.apellidoMaterno}`}
                       </td>
@@ -248,6 +295,15 @@ const Visitas = () => {
                       <td className="visitas-table-cell">{visita.hora?.substring(0, 5) || '-'}</td>
                       <td className="visitas-table-cell">{formatDate(visita.dia)}</td>
                       <td className="visitas-table-cell">{visita.departamento || '-'}</td>
+                      <td className="visitas-table-cell">
+                        {visita.escaneado ? (
+                          <span className="status-badge ingresado">
+                            <FiCheckCircle /> Ingresó
+                          </span>
+                        ) : (
+                          <span className="status-badge pendiente">Pendiente</span>
+                        )}
+                      </td>
                       <td className="visitas-table-cell visitas-action-cell">
                         <button
                           className="action-btn edit-btn"
@@ -275,7 +331,7 @@ const Visitas = () => {
                   ))
                 ) : (
                   <tr className="no-data-row">
-                    <td colSpan="6">
+                    <td colSpan="7">
                       <div className="no-data-message">
                         No se encontraron visitas con los filtros actuales
                       </div>
@@ -290,7 +346,7 @@ const Visitas = () => {
           <div className="visitas-cards">
             {currentVisits.length > 0 ? (
               currentVisits.map(visita => (
-                <div key={visita.id} className="visita-card">
+                <div key={visita.id} className={`visita-card ${visita.escaneado ? 'escaneada' : ''}`}>
                   <div className="card-row">
                     <span className="card-label">Visitante:</span>
                     <span className="card-value">
@@ -312,6 +368,18 @@ const Visitas = () => {
                   <div className="card-row">
                     <span className="card-label">Departamento:</span>
                     <span className="card-value">{visita.departamento || '-'}</span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Estado:</span>
+                    <span className="card-value">
+                      {visita.escaneado ? (
+                        <span className="status-badge ingresado">
+                          <FiCheckCircle /> Ingresó
+                        </span>
+                      ) : (
+                        <span className="status-badge pendiente">Pendiente</span>
+                      )}
+                    </span>
                   </div>
                   <div className="card-actions">
                     <button

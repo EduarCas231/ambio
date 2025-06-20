@@ -24,7 +24,8 @@ const API = {
   visitas: {
   getAll: `${API_BASE_URL}/visitam`,
   getById: (id) => `${API_BASE_URL}/visitam/${id}`,
-  getByCode: (codigo) => `${API_BASE_URL}/visitam/codigo/${encodeURIComponent(codigo)}`, // ← Agregado
+  getByCode: (codigo) => `${API_BASE_URL}/visitam/codigo/${encodeURIComponent(codigo)}`,
+  markScanned: (id) => `${API_BASE_URL}/visitam/${id}/escaneado`,
   create: `${API_BASE_URL}/visitam`,
   update: (id) => `${API_BASE_URL}/visitam/${id}`,
   delete: (id) => `${API_BASE_URL}/visitam/${id}`,

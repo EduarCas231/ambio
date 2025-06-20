@@ -64,6 +64,27 @@ function Escaner() {
     }
   };
 
+  const marcarComoEscaneado = async (visitaId) => {
+    try {
+      const response = await fetch(API.visitas.markScanned(visitaId), {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          escaneado: true,
+          fechaEscaneo: new Date().toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Error al marcar como escaneado');
+      }
+    } catch (error) {
+      console.error('Error al marcar como escaneado:', error);
+    }
+  };
+
   const handleScan = async (codigo) => {
     if (!codigo) return;
 
@@ -71,9 +92,12 @@ function Escaner() {
 
     try {
       const visita = await verificarVisita(codigo);
+      
+      // Marcar como escaneado en el backend
+      await marcarComoEscaneado(visita.id);
 
       Swal.fire({
-        title: 'VISITA VERIFICADA',
+        title: 'VISITA VERIFICADA - INGRESO REGISTRADO',
         html: `
           <div class="verification-result">
             <h4>${visita.nombre} ${visita.apellidoPaterno}</h4>
@@ -81,6 +105,7 @@ function Escaner() {
             <div class="detail-row"><strong>Fecha:</strong> ${visita.dia}</div>
             <div class="detail-row"><strong>Hora:</strong> ${visita.hora?.substring(0, 5)}</div>
             ${visita.detalle ? `<div class="detail-row"><strong>Detalle:</strong> ${visita.detalle}</div>` : ''}
+            <div class="status-badge">✅ ACCESO AUTORIZADO</div>
           </div>
         `,
         icon: 'success',
