@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, NavLink, useLocation } from 'react-router-dom';
 import './NavBar.css';
 import API from '../config/api';
+import { FiBell } from 'react-icons/fi';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [userTipo, setUserTipo] = useState(localStorage.getItem("tipo"));
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
 
   // Determina si estamos en la página de inicio
   const isHomePage = location.pathname === '/home';
@@ -44,6 +46,27 @@ const NavBar = () => {
 
     verificarToken();
   }, [navigate]);
+
+  // Verificar notificaciones no leídas desde la base de datos
+  useEffect(() => {
+    const checkNotifications = async () => {
+      try {
+        const response = await fetch(API.notificaciones.getUnreadCount);
+        if (response.ok) {
+          const data = await response.json();
+          setNotificacionesCount(data.count || 0);
+        }
+      } catch (error) {
+        console.error('Error al obtener contador de notificaciones:', error);
+      }
+    };
+
+    checkNotifications();
+    
+    // Verificar cada 10 segundos
+    const interval = setInterval(checkNotifications, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,7 +125,12 @@ const NavBar = () => {
       to="/visitas" 
       className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
     >
-      Visitas
+      <span className="nav-item-content">
+        Visitas
+        {notificacionesCount > 0 && (
+          <span className="notification-badge">{notificacionesCount}</span>
+        )}
+      </span>
     </NavLink>
     <NavLink
       to="/escaner"

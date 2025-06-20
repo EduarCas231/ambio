@@ -37,18 +37,8 @@ const Visitas = () => {
         throw new Error('Formato inesperado de datos recibidos');
       }
 
-      // Detectar nuevas visitas escaneadas para notificaciones
-      const visitasEscaneadas = data.data.filter(v => v.escaneado && !visitas.find(old => old.id === v.id && old.escaneado));
-      if (visitasEscaneadas.length > 0) {
-        const nuevasNotificaciones = visitasEscaneadas.map(v => ({
-          id: Date.now() + Math.random(),
-          visitaId: v.id,
-          mensaje: `${v.nombre} ${v.apellidoPaterno} ha ingresado`,
-          timestamp: new Date(),
-          leida: false
-        }));
-        setNotificaciones(prev => [...nuevasNotificaciones, ...prev]);
-      }
+      // Cargar notificaciones desde la base de datos
+      await fetchNotificaciones();
 
       setVisitas(data.data);
     } catch (err) {
@@ -66,13 +56,38 @@ const Visitas = () => {
 
   useEffect(() => {
     fetchVisitas();
+    fetchNotificaciones();
     // Actualizar cada 30 segundos para detectar nuevos escaneos
-    const interval = setInterval(fetchVisitas, 30000);
+    const interval = setInterval(() => {
+      fetchVisitas();
+      fetchNotificaciones();
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  const limpiarNotificaciones = () => {
-    setNotificaciones([]);
+  const fetchNotificaciones = async () => {
+    try {
+      const response = await fetch(API.notificaciones.getAll);
+      if (response.ok) {
+        const data = await response.json();
+        setNotificaciones(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error al cargar notificaciones:', error);
+    }
+  };
+
+  const limpiarNotificaciones = async () => {
+    try {
+      const response = await fetch(API.notificaciones.markAllAsRead, {
+        method: 'PUT'
+      });
+      if (response.ok) {
+        setNotificaciones(prev => prev.map(n => ({ ...n, leida: true })));
+      }
+    } catch (error) {
+      console.error('Error al marcar notificaciones como leídas:', error);
+    }
   };
 
   const handleRegistroVisita = () => navigate('/registrosV');

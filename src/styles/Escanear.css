@@ -251,3 +251,14 @@
   margin-top: 15px;
   font-size: 0.9rem;
 }
+/* Estilos para el badge de código ya utilizado */
+.status-badge-invalid {
+  display: inline-block;
+  background-color: #ef4444;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 0.9rem;
+}

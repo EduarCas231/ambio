@@ -72,8 +72,7 @@ function Escaner() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          escaneado: true,
-          fechaEscaneo: new Date().toISOString()
+          escaneado: true
         })
       });
 
@@ -92,6 +91,29 @@ function Escaner() {
 
     try {
       const visita = await verificarVisita(codigo);
+      
+      // Verificar si ya fue escaneado
+      if (visita.escaneado) {
+        Swal.fire({
+          title: 'CÓDIGO YA UTILIZADO',
+          html: `
+            <div class="verification-result">
+              <h4>${visita.nombre} ${visita.apellidoPaterno}</h4>
+              <div class="detail-row"><strong>Departamento:</strong> ${visita.departamento}</div>
+              <div class="detail-row"><strong>Fecha:</strong> ${visita.dia}</div>
+              <div class="detail-row"><strong>Hora:</strong> ${visita.hora?.substring(0, 5)}</div>
+              <div class="status-badge-invalid">❌ ACCESO YA REGISTRADO</div>
+              <p style="color: #ef4444; margin-top: 10px;"><strong>Este código QR ya fue escaneado anteriormente</strong></p>
+            </div>
+          `,
+          icon: 'warning',
+          confirmButtonColor: '#ef4444',
+          confirmButtonText: 'Entendido'
+        }).then(() => {
+          setScanning(true);
+        });
+        return;
+      }
       
       // Marcar como escaneado en el backend
       await marcarComoEscaneado(visita.id);
