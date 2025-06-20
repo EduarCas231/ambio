@@ -190,7 +190,11 @@ function Escaner() {
                         handleScan(result.text || result);
                       }
                     }}
-                    style={{ width: '100%' }}
+                    style={{ 
+                      width: '100%', 
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
                     facingMode={facingMode}
                     constraints={{
                       audio: false,
