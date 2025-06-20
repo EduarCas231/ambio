@@ -112,13 +112,15 @@ const NavBar = () => {
     </NavLink>
   </>
 )}
-
+            <button onClick={handleLogout} className="logout-btn mobile-logout">
+              Cerrar Sesión
+            </button>
           </div>
         </div>
 
         {/* Contenedor derecho con botón de logout */}
         <div className="navbar-right">
-          <button onClick={handleLogout} className="logout-btn">
+          <button onClick={handleLogout} className="logout-btn desktop-logout">
             <span className="logout-text">Cerrar Sesión</span>
           </button>
           

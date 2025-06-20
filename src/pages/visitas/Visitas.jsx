@@ -166,89 +166,89 @@ const Visitas = () => {
       <br />
       <div className="dashboard-container">
         <div className="dashboard-header">
-        <div className="header-title">
-          <h1>Registro de Visitas</h1>
-          <p>Administra y revisa el historial de visitas</p>
+          <div className="header-title">
+            <h1>Registro de Visitas</h1>
+            <p>Administra y revisa el historial de visitas</p>
+          </div>
+          <button className="primary-btn add-btn" onClick={handleRegistroVisita}>
+            <FiPlus className="btn-icon" /> Nueva Visita
+          </button>
         </div>
-        <button className="primary-btn add-btn" onClick={handleRegistroVisita}>
-          <FiPlus className="btn-icon" /> Nueva Visita
-        </button>
-      </div>
 
-      <div className="stats-badge">
-        <span>{visitasFiltradas.length} visitas encontradas</span>
-      </div>
+        <div className="stats-badge">
+          <span>{visitasFiltradas.length} visitas encontradas</span>
+        </div>
 
-      <div className="filters-container">
-        <div className="filter-group">
-          <FiSearch className="filter-icon" />
-          <input
-            type="text"
-            placeholder="Nombre del visitante"
-            value={filtroNombre}
-            onChange={(e) => setFiltroNombre(e.target.value)}
-            className="filter-input"
-          />
+        <div className="filters-container">
+          <div className="filter-group">
+            <FiSearch className="filter-icon" />
+            <input
+              type="text"
+              placeholder="Nombre del visitante"
+              value={filtroNombre}
+              onChange={(e) => setFiltroNombre(e.target.value)}
+              className="filter-input"
+            />
+          </div>
+          
+          <div className="filter-group">
+            <FiClock className="filter-icon" />
+            <input
+              type="text"
+              placeholder="Hora (HH:MM)"
+              value={filtroHora}
+              onChange={(e) => setFiltroHora(e.target.value)}
+              className="filter-input"
+            />
+          </div>
+          
+          <div className="filter-group">
+            <FiSearch className="filter-icon" />
+            <input
+              type="text"
+              placeholder="Departamento"
+              value={filtroDepartamento}
+              onChange={(e) => setFiltroDepartamento(e.target.value)}
+              className="filter-input"
+            />
+          </div>
+          
+          <div className="filter-group">
+            <input
+              type="date"
+              value={filtroFecha}
+              onChange={(e) => setFiltroFecha(e.target.value)}
+              className="filter-input date-input"
+            />
+          </div>
         </div>
-        
-        <div className="filter-group">
-          <FiClock className="filter-icon" />
-          <input
-            type="text"
-            placeholder="Hora (HH:MM)"
-            value={filtroHora}
-            onChange={(e) => setFiltroHora(e.target.value)}
-            className="filter-input"
-          />
-        </div>
-        
-        <div className="filter-group">
-          <FiSearch className="filter-icon" />
-          <input
-            type="text"
-            placeholder="Departamento"
-            value={filtroDepartamento}
-            onChange={(e) => setFiltroDepartamento(e.target.value)}
-            className="filter-input"
-          />
-        </div>
-        
-        <div className="filter-group">
-          <input
-            type="date"
-            value={filtroFecha}
-            onChange={(e) => setFiltroFecha(e.target.value)}
-            className="filter-input date-input"
-          />
-        </div>
-      </div>
 
-      <div className="data-card">
-        <div className="table-wrapper">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Visitante</th>
-                <th>Lugar</th>
-                <th>Hora</th>
-                <th>Fecha</th>
-                <th>Departamento</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentVisits.length > 0 ? (
-                currentVisits.map(visita => (
-                  <tr key={visita.id}>
-                    <td className="visitor-cell">
-                      <span className="visitor-name">{`${visita.nombre} ${visita.apellidoPaterno} ${visita.apellidoMaterno}`}</span>
-                    </td>
-                    <td>{visita.lugar || '-'}</td>
-                    <td>{visita.hora?.substring(0, 5) || '-'}</td>
-                    <td>{formatDate(visita.dia)}</td>
-                    <td>{visita.departamento || '-'}</td>
-                    <td className="actions-cell">
-                      <div className="action-buttons">
+        <div className="data-card">
+          {/* Tabla para desktop */}
+          <div className="table-responsive">
+            <table className="visitas-table">
+              <thead className="visitas-table-header">
+                <tr>
+                  <th className="visitas-table-header-cell">Visitante</th>
+                  <th className="visitas-table-header-cell">Lugar</th>
+                  <th className="visitas-table-header-cell">Hora</th>
+                  <th className="visitas-table-header-cell">Fecha</th>
+                  <th className="visitas-table-header-cell">Departamento</th>
+                  <th className="visitas-table-header-cell">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentVisits.length > 0 ? (
+                  currentVisits.map(visita => (
+                    <tr key={visita.id} className="visitas-table-row">
+                      <td className="visitas-table-cell">
+                        {`${visita.nombre} ${visita.apellidoPaterno} ${visita.apellidoMaterno}`}
+                      </td>
+                      <td className="visitas-table-cell">{visita.lugar || '-'}</td>
+                      <td className="visitas-table-cell">{visita.hora?.substring(0, 5) || '-'}</td>
+                      <td className="visitas-table-cell">{formatDate(visita.dia)}</td>
+                      <td className="visitas-table-cell">{visita.departamento || '-'}</td>
+                      <td className="visitas-table-cell visitas-action-cell">
                         <button
                           className="action-btn edit-btn"
                           onClick={() => handleEditar(visita.id)}
@@ -270,37 +270,95 @@ const Visitas = () => {
                         >
                           <FiEye />
                         </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr className="no-data-row">
+                    <td colSpan="6">
+                      <div className="no-data-message">
+                        No se encontraron visitas con los filtros actuales
                       </div>
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr className="no-data-row">
-                  <td colSpan="6">
-                    <div className="no-data-message">
-                      No se encontraron visitas con los filtros actuales
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {totalPages > 1 && (
-          <div className="pagination-container">
-            {[...Array(totalPages)].map((_, i) => (
-              <button
-                key={i}
-                onClick={() => paginate(i + 1)}
-                className={`pagination-btn ${currentPage === i + 1 ? 'active' : ''}`}
-              >
-                {i + 1}
-              </button>
-            ))}
+                )}
+              </tbody>
+            </table>
           </div>
-        )}
-      </div>
+          
+          {/* Tarjetas para móviles */}
+          <div className="visitas-cards">
+            {currentVisits.length > 0 ? (
+              currentVisits.map(visita => (
+                <div key={visita.id} className="visita-card">
+                  <div className="card-row">
+                    <span className="card-label">Visitante:</span>
+                    <span className="card-value">
+                      {`${visita.nombre} ${visita.apellidoPaterno} ${visita.apellidoMaterno}`}
+                    </span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Lugar:</span>
+                    <span className="card-value">{visita.lugar || '-'}</span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Hora:</span>
+                    <span className="card-value">{visita.hora?.substring(0, 5) || '-'}</span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Fecha:</span>
+                    <span className="card-value">{formatDate(visita.dia)}</span>
+                  </div>
+                  <div className="card-row">
+                    <span className="card-label">Departamento:</span>
+                    <span className="card-value">{visita.departamento || '-'}</span>
+                  </div>
+                  <div className="card-actions">
+                    <button
+                      className="action-btn edit-btn"
+                      onClick={() => handleEditar(visita.id)}
+                      title="Editar"
+                    >
+                      <FiEdit />
+                    </button>
+                    <button
+                      className="action-btn delete-btn"
+                      onClick={() => handleBorrar(visita.id)}
+                      title="Eliminar"
+                    >
+                      <FiTrash2 />
+                    </button>
+                    <button
+                      className="action-btn view-btn"
+                      onClick={() => handleDetalle(visita.id)}
+                      title="Detalles"
+                    >
+                      <FiEye />
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-data-message">
+                No se encontraron visitas con los filtros actuales
+              </div>
+            )}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="pagination-container">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => paginate(i + 1)}
+                  className={`pagination-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

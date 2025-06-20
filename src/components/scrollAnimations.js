@@ -8,10 +8,9 @@
 
 // Configuration constants
 const SCROLL_CONFIG = {
-    triggerRatio: 5, // windowHeight / 5
-    throttleDelay: 50, // milliseconds
+    triggerRatio: 4, // windowHeight / 4 (more responsive)
     defaultAnimationDelay: 100, // milliseconds
-    observerThreshold: 0.1 // Intersection Observer threshold
+    observerThreshold: 0.15 // Intersection Observer threshold
   };
   
   // Animation types mapping
@@ -86,28 +85,22 @@ const SCROLL_CONFIG = {
   };
   
   /**
-   * Modern Intersection Observer approach (fallback for older browsers)
+   * Intersection Observer approach (preferred for mobile)
    * @param {NodeList} elements - Elements to observe
    */
   const initIntersectionObserver = (elements) => {
-    if (!window.IntersectionObserver) {
-      // Fallback to scroll event for older browsers
-      return false;
-    }
-  
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !entry.target.classList.contains('visible')) {
             animateToVisible(entry.target);
-            // Stop observing once animated
             observer.unobserve(entry.target);
           }
         });
       },
       {
         threshold: SCROLL_CONFIG.observerThreshold,
-        rootMargin: '50px'
+    
       }
     );
   
@@ -115,12 +108,10 @@ const SCROLL_CONFIG = {
       applyInitialState(element);
       observer.observe(element);
     });
-  
-    return true;
   };
   
   /**
-   * Initialize scroll animations with throttling
+   * Initialize scroll animations with mobile-optimized throttling
    * @param {NodeList} elements - Elements to animate
    */
   const initScrollEventListener = (elements) => {
@@ -130,40 +121,32 @@ const SCROLL_CONFIG = {
     // Initial check on load
     handleScrollAnimations(elements);
     
-    // Throttled scroll listener
-    let isScrolling = false;
-    let scrollTimeout;
+    // Mobile-optimized scroll handler
+    let ticking = false;
     
-    const throttledScrollHandler = () => {
-      if (!isScrolling) {
-        window.requestAnimationFrame(() => {
+    const scrollHandler = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
           handleScrollAnimations(elements);
-          isScrolling = false;
+          ticking = false;
         });
-        isScrolling = true;
+        ticking = true;
       }
-      
-      // Clear existing timeout
-      clearTimeout(scrollTimeout);
-      
-      // Set timeout for final scroll check
-      scrollTimeout = setTimeout(() => {
-        handleScrollAnimations(elements);
-      }, SCROLL_CONFIG.throttleDelay);
     };
     
-    // Add scroll event listener
-    window.addEventListener('scroll', throttledScrollHandler, { passive: true });
+    // Add scroll event listener with passive option for better mobile performance
+    window.addEventListener('scroll', scrollHandler, { 
+      passive: true,
+      capture: false
+    });
     
-    // Add resize event listener for responsive updates
-    window.addEventListener('resize', () => {
-      handleScrollAnimations(elements);
-    }, { passive: true });
+    // Add resize event listener
+    window.addEventListener('resize', scrollHandler, { passive: true });
   };
   
   /**
    * Main function to initialize scroll animations
-   * Automatically detects and uses the best method available
+   * Prioritizes Intersection Observer for better mobile performance
    */
   export const initScrollAnimations = () => {
     // Wait for DOM to be ready
@@ -176,22 +159,15 @@ const SCROLL_CONFIG = {
     const elements = document.querySelectorAll('.scroll-animate, [data-aos]');
     
     if (elements.length === 0) {
-      console.warn('No elements found for scroll animations');
       return;
     }
     
-    // Try to use Intersection Observer first (modern approach)
-    const observerInitialized = initIntersectionObserver(elements);
-    
-    // Fallback to scroll event listener if Intersection Observer is not available
-    if (!observerInitialized) {
-      console.info('Using scroll event fallback for animations');
+    // Always try Intersection Observer first (better for mobile)
+    if (window.IntersectionObserver) {
+      initIntersectionObserver(elements);
+    } else {
+      // Minimal fallback for very old browsers
       initScrollEventListener(elements);
-    }
-    
-    // Debug mode (remove in production)
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Initialized scroll animations for ${elements.length} elements`);
     }
   };
   
