@@ -196,9 +196,9 @@ function Escaner() {
                       audio: false,
                       video: {
                         facingMode: facingMode,
-                        width: { ideal: 480, max: 640 },
-                        height: { ideal: 640, max: 960 },
-                        aspectRatio: 0.75
+                        width: { ideal: 360, min: 320, max: 480 },
+                        height: { ideal: 640, min: 480, max: 720 },
+                        aspectRatio: { ideal: 0.75, min: 0.5, max: 1.0 }
                       }
                     }}
                   />
