@@ -30,7 +30,36 @@ const Editar = () => {
           throw new Error('Error al obtener los datos de la visita');
         }
         const data = await response.json();
-        setVisita(data);
+        console.log('Datos del backend:', data);
+        
+        
+        let fechaFormateada = '';
+        let horaFormateada = '';
+        
+        if (data.fecha) {
+         
+          const fechaObj = new Date(data.fecha);
+          
+          
+          fechaFormateada = fechaObj.getUTCFullYear() + '-' + 
+                           String(fechaObj.getUTCMonth() + 1).padStart(2, '0') + '-' + 
+                           String(fechaObj.getUTCDate()).padStart(2, '0');
+          
+          horaFormateada = String(fechaObj.getUTCHours()).padStart(2, '0') + ':' + 
+                          String(fechaObj.getUTCMinutes()).padStart(2, '0');
+        }
+        
+        console.log('Fecha y hora UTC formateadas:', { fechaFormateada, horaFormateada });
+        
+       
+        setVisita({
+          ...data,
+          dia: fechaFormateada,
+          hora: horaFormateada,
+          codigo: data.codigo,
+          escaneado: data.escaneado,
+          fecha_escaneo: data.fecha_escaneo
+        });
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -55,14 +84,35 @@ const Editar = () => {
     });
   };
 
+  const formatFecha = (dateStr, timeStr) => {
+    if (!dateStr || !timeStr) return null;
+    return `${dateStr} ${timeStr}:00`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      
+      const updateData = {
+        nombre: visita.nombre,
+        apellidoPaterno: visita.apellidoPaterno,
+        apellidoMaterno: visita.apellidoMaterno,
+        lugar: visita.lugar,
+        fecha: formatFecha(visita.dia, visita.hora), 
+        departamento: visita.departamento,
+        detalle: visita.detalle,
+        codigo: visita.codigo, 
+        escaneado: visita.escaneado, 
+        fecha_escaneo: visita.fecha_escaneo 
+      };
+      
+      console.log('Datos a enviar:', updateData);
+
       const response = await fetch(API.visitas.update(id), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(visita)
+        body: JSON.stringify(updateData)
       });
 
       if (!response.ok) {

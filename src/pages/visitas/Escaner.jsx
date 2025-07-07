@@ -92,7 +92,7 @@ function Escaner() {
     try {
       const visita = await verificarVisita(codigo);
       
-      // Verificar si ya fue escaneado
+      
       if (visita.escaneado) {
         Swal.fire({
           title: 'CÓDIGO YA UTILIZADO',
@@ -115,7 +115,7 @@ function Escaner() {
         return;
       }
       
-      // Marcar como escaneado en el backend
+      
       await marcarComoEscaneado(visita.id);
 
       Swal.fire({
@@ -169,7 +169,7 @@ function Escaner() {
 
   const switchCamera = async () => {
     try {
-      // Detener la cámara actual primero
+      
       if (qrScannerRef.current) {
         const videoElement = qrScannerRef.current.video;
         if (videoElement && videoElement.srcObject) {
@@ -178,11 +178,11 @@ function Escaner() {
         }
       }
 
-      // Cambiar a la otra cámara
+      
       const newFacingMode = facingMode === 'environment' ? 'user' : 'environment';
       setFacingMode(newFacingMode);
       
-      // Forzar reinicio del scanner
+      
       setScanning(false);
       setTimeout(() => setScanning(true), 100);
       

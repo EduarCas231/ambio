@@ -1,5 +1,5 @@
 // Configuración de URLs de API
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://189.136.70.8';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://189.136.60.147';
 
 const API = {
   auth: {
@@ -35,6 +35,7 @@ const API = {
     markAsRead: (id) => `${API_BASE_URL}/notificaciones/${id}/read`,
     markAllAsRead: `${API_BASE_URL}/notificaciones/read-all`,
     getUnreadCount: `${API_BASE_URL}/notificaciones/unread-count`,
+    deleteByVisitaId: (visitaId) => `${API_BASE_URL}/notificaciones/visita/${visitaId}`,
   }
 };
 

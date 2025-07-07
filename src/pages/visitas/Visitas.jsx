@@ -14,7 +14,7 @@ const Visitas = () => {
   const [notificaciones, setNotificaciones] = useState([]);
   const visitsPerPage = 10;
 
-  // Filtros
+  
   const [filtroNombre, setFiltroNombre] = useState('');
   const [filtroHora, setFiltroHora] = useState('');
   const [filtroDepartamento, setFiltroDepartamento] = useState('');
@@ -37,7 +37,7 @@ const Visitas = () => {
         throw new Error('Formato inesperado de datos recibidos');
       }
 
-      // Cargar notificaciones desde la base de datos
+      
       await fetchNotificaciones();
 
       setVisitas(data.data);
@@ -57,11 +57,11 @@ const Visitas = () => {
   useEffect(() => {
     fetchVisitas();
     fetchNotificaciones();
-    // Actualizar cada 30 segundos para detectar nuevos escaneos
+   
     const interval = setInterval(() => {
       fetchVisitas();
       fetchNotificaciones();
-    }, 30000);
+    }, 100000);
     return () => clearInterval(interval);
   }, []);
 
@@ -108,13 +108,39 @@ const Visitas = () => {
 
     if (confirmResult.isConfirmed) {
       try {
+        console.log('Intentando eliminar visita ID:', id);
+        
+       
+        const notificacionesRelacionadas = notificaciones.filter(n => n.visita_id == id);
+        console.log('Notificaciones a eliminar:', notificacionesRelacionadas.length);
+        
+        for (const notif of notificacionesRelacionadas) {
+          try {
+            await fetch(`https://189.136.60.147/notificaciones/${notif.id}`, {
+              method: 'DELETE',
+            });
+            console.log(`Notificación ${notif.id} eliminada`);
+          } catch (error) {
+            console.warn(`Error eliminando notificación ${notif.id}:`, error);
+          }
+        }
+        
+       
         const response = await fetch(API.visitas.delete(id), {
           method: 'DELETE',
         });
 
-        if (!response.ok) throw new Error('Error al eliminar la visita');
+        console.log('Respuesta del servidor:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error del servidor:', errorText);
+          throw new Error(`Error ${response.status}: ${errorText}`);
+        }
 
         setVisitas(visitas.filter((visita) => visita.id !== id));
+        fetchNotificaciones();
+        
         Swal.fire({
           title: '¡Eliminado!',
           text: 'La visita ha sido eliminada.',
@@ -122,10 +148,11 @@ const Visitas = () => {
           timer: 1500,
           showConfirmButton: false
         });
-      } catch {
+      } catch (error) {
+        console.error('Error completo:', error);
         Swal.fire({
           title: 'Error',
-          text: 'No se pudo eliminar la visita',
+          text: error.message || 'No se pudo eliminar la visita',
           icon: 'error',
           confirmButtonText: 'Aceptar',
           confirmButtonColor: '#2b91e7'
@@ -141,7 +168,8 @@ const Visitas = () => {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
+        timeZone: 'UTC' 
       };
       return date.toLocaleDateString('es-MX', options)
         .replace(/\b\w/g, l => l.toUpperCase());
@@ -150,7 +178,6 @@ const Visitas = () => {
     }
   };
 
-  // Filtrar visitas según inputs
   const visitasFiltradas = visitas.filter((visita) => {
     const nombreCompleto = `${visita.nombre} ${visita.apellidoPaterno} ${visita.apellidoMaterno}`.toLowerCase();
     const horaVisita = visita.hora?.substring(0, 5) || '';
@@ -163,7 +190,7 @@ const Visitas = () => {
     return filtroNombreOk && filtroHoraOk && filtroDepartamentoOk && filtroFechaOk;
   });
 
-  // Paginación
+  
   const indexOfLastVisit = currentPage * visitsPerPage;
   const indexOfFirstVisit = indexOfLastVisit - visitsPerPage;
   const currentVisits = visitasFiltradas.slice(indexOfFirstVisit, indexOfLastVisit);
@@ -285,7 +312,7 @@ const Visitas = () => {
         </div>
 
         <div className="data-card">
-          {/* Tabla para desktop */}
+          
           <div className="table-responsive">
             <table className="visitas-table">
               <thead className="visitas-table-header">
@@ -357,7 +384,7 @@ const Visitas = () => {
             </table>
           </div>
           
-          {/* Tarjetas para móviles */}
+          
           <div className="visitas-cards">
             {currentVisits.length > 0 ? (
               currentVisits.map(visita => (
